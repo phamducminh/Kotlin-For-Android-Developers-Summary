@@ -9,10 +9,20 @@
     - [1.2. Class inheritance](README.md#12-class-inheritance)
     - [1.3. Functions](README.md#13-functions)
     - [1.4. Constructor and functions parameters](README.md#14-constructor-and-functions-parameters)
+- [2. Variables and properties](README.md#2-variables-and-properties)
+    - [2.1. Basic types](README.md#21-basic-types)
+    - [2.2. Variables](README.md#22-variables)
+    - [2.3. Properties](README.md#23-properties)
+
+- [3. Anko and Extension Functions](README.md#3-anko-and-extension-functions)
+    - [3.1. What is Anko?](README.md#31-what-is-anko)
+    - [3.2. Start using Anko](README.md#32-start-using-anko)
+    - [3.3. Extension functions](README.md#33-extension-functions)
 
 ---
 
 ## 1. Classes and functions
+
 ### 1.1. How to declare a class
 
 ```kotlin
@@ -110,3 +120,25 @@ niceToast(message = "Hello", tag = "MyTag")
 
 * Classes, functions or properties are **_public_** by
 default
+
+## 2. Variables and properties
+
+In Kotlin:
+* **Everything is an object**
+* No primivitve types as in Java
+
+### 2.1. Basic types
+
+### 2.2. Variables
+
+### 2.3. Properties
+
+## 3. Anko and Extension Functions
+
+### 3.1. What is Anko?
+
+### 3.2. Start using Anko
+
+### 3.3. Extension functions
+
+
