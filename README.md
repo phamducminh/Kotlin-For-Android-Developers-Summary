@@ -129,9 +129,133 @@ In Kotlin:
 
 ### 2.1. Basic types
 
+Some differences:
+
+* No automatic conversions among numeric types. Cannot assign an Int to a Double variable, must use explicit conversion
+
+```kotlin
+val i: Int = 7
+val d: Double = i.toDouble()
+```
+
+* Characters (Char) cannot directly be used as numbers.
+
+```kotlin
+val c: Char = 'c'
+val i: Int = c.toInt()
+```
+
+* Using "and" and "or" for bitwise arithmetical operations
+
+```kotlin
+// Java
+int bitwiseOr = FLAG1 | FLAG2;
+int bitwiseAnd = FLAG1 & FLAG2;
+
+// Kotlin
+val bitwiseOr = FLAG1 or FLAG2
+val bitwiseAnd = FLAG1 and FLAG2
+```
+
+* Literals can give information about its type. Let the compiler infer the type:
+
+```kotlin
+val i= 12 // An Int
+val iHex = 0x0f // An Int from hexadecimal literal
+val l = 3L // A Long
+val d = 3.5 // A Double
+val f = 3.5F // A Float
+```
+
+* A String can be accessed as an array and can be iterated:
+
+```kotlin
+val s = "Example"
+val c = s[2] // This is the Char 'a'
+
+// Iterate over String
+val s = "Example"
+for(c in s){
+    print(c)
+}
+```
+
 ### 2.2. Variables
 
+* Variables in Kotlin can be easily defined as mutable (**var**) or immutable (**val**).
+
+* **The key concept: just use val as much as possible**
+
+* Don’t need to specify object types, they will be inferred from the value
+
+```kotlin
+val s = "Example" // A String
+val i = 23 // An Int
+val actionBar = supportActionBar // An ActionBar in an Activity context
+```
+
+However, a type needs to be specified if we want to use a more generic type:
+
+```kotlin
+val a: Any = 23
+val c: Context = activity
+```
+
 ### 2.3. Properties
+
+Properties are the equivalent to fields in Java. Properties will do the work of a field plus a getter plus a setter.
+
+In Java:
+
+```java
+public class Person {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+...
+
+Person person = new Person();
+person.setName("name");
+String name = person.getName();
+```
+
+In Kotlin, only a property is required:
+
+```kotlin
+public class Person {}
+
+    var name: String = ""
+
+}
+
+...
+
+val person = Person()
+person.name = "name"
+val name = person.name
+```
+
+Custom getter and setter:
+
+```kotlin
+public class Person {
+    
+    var name: String = ""
+        get() = field.toUpperCase()
+    set(value) {
+        field = "Name: $value"
+    }
+    
+}
+```
 
 ## 3. Anko and Extension Functions
 
