@@ -23,6 +23,11 @@
     - [4.1 Performing a request](README.md#41-performing-a-request)
     - [4.2 Performing the request out of the main thread](README.md#42-performing-the-request-out-of-the-main-thread)
 
+- [5. Data Classes](README.md#5-data-classes)
+    - [5.1 Extra functions](README.md#51-extra-functions)
+    - [5.2 Copying a data class](README.md#52-copying-a-data-class)
+    - [5.3 Mapping an object into variables](README.md#53-mapping-an-object-into-variables)
+
 ---
 
 ## 1. Classes and functions
@@ -316,6 +321,60 @@ async(executor) {
 }
 ```
 
-* to return a future with a result, use **```asyncResult```**.
+* To return a future with a result, use **```asyncResult```**.
+
+## 5. Data Classes
+
+Data classes in Kotlin = POJO classes in Java
+
+```kotlin
+data class Forecast(val date: Date, val temperature: Float, val details: String)
+```
+
+### 5.1 Extra functions
+
+* ```equals()```
+* ```hashCode()```
+* ```copy()```: copy an object, modify the properties.
+* A set of numbered functions to map an object into variables.
+
+### 5.2 Copying a data class
+
+If using immutability, if we want to change the state of an object, a new instance of the class is required
+
+```kotlin
+val f1 = Forecast(Date(), 27.5f, "Shiny day")
+val f2 = f1.copy(temperature = 30f)
+```
+
+This way, we copy the first forecast and modify only the temperature property without changing the state of the original object.
+
+### 5.3 Mapping an object into variables
+
+* This process is known as **multi-declaration** and consists of mapping each property inside an object into a variable.
+* The ```componentX``` functions are automatically created.
+
+Ex:
+
+```kotlin
+val f1 = Forecast(Date(), 27.5f, "Shiny day")
+val (date, temperature, details) = f1
+```
+
+This multi-declaration is compiled down to the following code:
+
+```kotlin
+val date = f1.component1()
+val temperature = f1.component2()
+val details = f1.component3()
+```
+
+Another example:
+
+```kotlin
+for ((key, value) in map) {
+    Log.d("map", "key:$key, value:$value")
+}
+```
 
 
