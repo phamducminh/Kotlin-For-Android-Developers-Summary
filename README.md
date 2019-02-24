@@ -19,6 +19,10 @@
     - [3.2. Start using Anko](README.md#32-start-using-anko)
     - [3.3. Extension functions](README.md#33-extension-functions)
 
+- [4. Retrieving data from API](README.md#4-retrieving-data-from-api)
+    - [4.1 Performing a request](README.md#41-performing-a-request)
+    - [4.2 Performing the request out of the main thread](README.md#42-performing-the-request-out-of-the-main-thread)
+
 ---
 
 ## 1. Classes and functions
@@ -183,9 +187,7 @@ for(c in s){
 ### 2.2. Variables
 
 * Variables in Kotlin can be easily defined as mutable (**var**) or immutable (**val**).
-
 * **The key concept: just use val as much as possible**
-
 * Don’t need to specify object types, they will be inferred from the value
 
 ```kotlin
@@ -253,7 +255,7 @@ public class Person {
     set(value) {
         field = "Name: $value"
     }
-    
+
 }
 ```
 
@@ -261,8 +263,59 @@ public class Person {
 
 ### 3.1. What is Anko?
 
+* Anko is a powerful library developed by JetBrains.
+* Its main purpose is the generation of UI layouts by using code instead of XML.
+* Anko includes a lot of extremely helpful functions and properties that will avoid lots of boilerplate.
+
 ### 3.2. Start using Anko
 
+Anytime you use something from Anko, it will include an import with the name of the property or function to the file. This is because Anko uses **extension functions** to add new features to Android framework.
+
+In ```MainActivity:onCreate```, an Anko extension function can be used to simplify how to find the ```RecyclerView```:
+
+```kotlin
+val forecastList: RecyclerView = find(R.id.forecast_list)
+```
+
 ### 3.3. Extension functions
+
+## 4. Retrieving data from API
+
+### 4.1 Performing a request
+
+Request class simply receives an url, reads the result and outputs the json in the Logcat
+
+```kotlin
+class Request(val url: String) {
+
+    fun run() {
+        val forecastJsonStr = URL(url).readText()
+        Log.d(javaClass.simpleName, forecastJsonStr)
+    }
+
+}
+```
+
+### 4.2 Performing the request out of the main thread
+
+```kotlin
+async() {
+    Request(url).run()
+    uiThread { longToast("Request performed") }
+}
+```
+
+* **```async```** function will execute its code in another thread, with the option to return to the main thread by calling ```uiThread```
+* ```uiThread``` is implemented differently depending on the caller object. If it’s used by an ```Activity```, the ```uiThread``` code won’t be executed if ```activity.isFinishing()``` returns ```true```, and it won’t crash if the activity is no longer valid.
+* use ```async``` executor:
+
+```kotlin
+val executor = Executors.newScheduledThreadPool(4)
+async(executor) {
+    // Some task
+}
+```
+
+* to return a future with a result, use **```asyncResult```**.
 
 
