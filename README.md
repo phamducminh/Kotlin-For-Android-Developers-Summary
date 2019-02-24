@@ -41,7 +41,7 @@ class MainActivity {
 class Person(name: String, surname: String)
 ```
 
-* Using _init_ block to declare the body of constructor
+* Using ```init``` block to declare the body of constructor
 
 ```kotlin
 class Person(name: String, surname: String) {
@@ -53,7 +53,7 @@ class Person(name: String, surname: String) {
 
 ### 1.2. Class inheritance
 
-* A class always extends from **_Any_** (similar to Java _Object_).
+* A class always extends from **```Any```** (similar to Java _Object_).
 * Classes are closed by default (final).
 * Can only extend a class if it's exlicitly declared as **open** or **abstract**:
 
@@ -66,14 +66,14 @@ _Note that when using the single constructor nomenclature, we need to specify th
 
 ### 1.3. Functions
 
-* Using **fun** keyword:
+* Using **```fun```** keyword:
 
 ```kotlin
 fun onCreate(savedInstanceState: Bundle?) {
 }
 ```
 
-* Return **Unit** (kotlin) = **void** (Java), any type can be returned
+* Return **```Unit```** (kotlin) = **```void```** (Java), any type can be returned
 
 ```kotlin
 fun add(x: Int, y: Int) : Int {
@@ -122,7 +122,7 @@ niceToast(message = "Hello", length = Toast.LENGTH_SHORT)
 niceToast(message = "Hello", tag = "MyTag")
 ```
 
-* Classes, functions or properties are **_public_** by
+* Classes, functions or properties are **```public```** by
 default
 
 ## 2. Variables and properties
@@ -149,7 +149,7 @@ val c: Char = 'c'
 val i: Int = c.toInt()
 ```
 
-* Using "and" and "or" for bitwise arithmetical operations
+* Using "```and```" and "```or```" for bitwise arithmetical operations
 
 ```kotlin
 // Java
