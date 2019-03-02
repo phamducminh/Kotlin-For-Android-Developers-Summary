@@ -28,6 +28,11 @@
     - [5.2 Copying a data class](README.md#52-copying-a-data-class)
     - [5.3 Mapping an object into variables](README.md#53-mapping-an-object-into-variables)
 
+- [6 Parsing data](README.md#6-parsing-data)
+    - [6.1 Converting json to data classes](README.md#61-converting-json-to-data-classes)
+    - [6.2 Shaping the domain layer](README.md#62-shaping-the-domain-layer)
+    - [6.3 Drawing the data in the UI](README.md#63-drawing-the-data-in-the-ui)
+
 ---
 
 ## 1. Classes and functions
@@ -377,4 +382,85 @@ for ((key, value) in map) {
 }
 ```
 
+## 6 Parsing data
+
+### 6.1 Converting json to data classes
+
+**Companion objects**
+
+In Kotlin, we can’t create static properties or functions, but we need to rely on objects.
+
+If we need some static properties, constants or functions in a class, we can use a **companion object**. This object will be shared among all instances of the class, the same as a static field or method would do in Java.
+
+```kotlin
+class ForecastRequest(val zipCode: String) {
+
+    companion object {
+        private val APP_ID = "15646a06818f61f7b8d7823ca833e1ce"
+        private val URL = "https://api.openweathermap.org/data/2.5/forecast/daily?mode=json&units=metric&cnt=7"
+        private val COMPLETE_URL = "$URL&APPID=$APP_ID&q="
+    }
+
+    fun execute(): ForecastResult {
+        val forecastResult = URL(COMPLETE_URL + zipCode).readText()
+        return Gson().fromJson(forecastResult, ForecastResult::class.java)
+    }
+
+}
+```
+
+### 6.2 Shaping the domain layer
+
+```kotlin
+class ForecastDataMapper {
+
+    fun convertFromDataModel(forecast: ForecastResult): ForecastList {
+        return ForecastList(forecast.city.name, forecast.city.country, convertForecastListToDomain(forecast.list))
+    }
+
+    private fun convertForecastListToDomain(list: List<Forecast>): List<ModelForecast> {
+        return list.map { convertForecastItemToDomain(it) }
+    }
+
+    private fun convertForecastItemToDomain(forecast: Forecast): ModelForecast {
+        return ModelForecast(
+            convertDate(forecast.dt), forecast.weather[0].description, forecast.temp.max.toInt(),
+            forecast.temp.min.toInt(), generateIconUrl(forecast.weather[0].icon)
+        )
+    }
+
+    private fun convertDate(date: Long): String {
+        val df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+        return df.format(date * 1000)
+    }
+
+}
+```
+
+* When using two classes with the same name, give a specific name to one of them so that we don’t need to write the complete package:
+
+```kotlin
+import com.minhpd.weatherapp.domain.model.Forecast as ModelForecast
+```
+
+* To convert the forecast list from the data to the domain model:
+
+```kotlin
+return list.map { convertForecastItemToDomain(it) }
+```
+
+In a single line, we can loop over the collection and return a new list with the converted items.
+
+### 6.3 Drawing the data in the UI
+
+```kotlin
+override fun onBindViewHolder(holder: ViewHolder,
+            position: Int) {
+    with(weekForecast.dailyForecast[position]) {
+        holder.textView.text = "$date - $description - $high/$low"
+    } 
+}
+```
+
+_```with``` is a useful function included in the standard Kotlin library. It basically receives an object and an extension function as parameters, and makes the object execute the function. This means that all the code we define inside the brackets acts as an extension function of the object we specify in the first parameter, and we can use all its public functions and properties, as well as this. Really helpful to simplify code when we do several operations over the same object._
 
