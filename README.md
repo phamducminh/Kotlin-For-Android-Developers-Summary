@@ -20,18 +20,22 @@
     - [3.3. Extension functions](README.md#33-extension-functions)
 
 - [4. Retrieving data from API](README.md#4-retrieving-data-from-api)
-    - [4.1 Performing a request](README.md#41-performing-a-request)
-    - [4.2 Performing the request out of the main thread](README.md#42-performing-the-request-out-of-the-main-thread)
+    - [4.1. Performing a request](README.md#41-performing-a-request)
+    - [4.2. Performing the request out of the main thread](README.md#42-performing-the-request-out-of-the-main-thread)
 
 - [5. Data Classes](README.md#5-data-classes)
-    - [5.1 Extra functions](README.md#51-extra-functions)
-    - [5.2 Copying a data class](README.md#52-copying-a-data-class)
-    - [5.3 Mapping an object into variables](README.md#53-mapping-an-object-into-variables)
+    - [5.1. Extra functions](README.md#51-extra-functions)
+    - [5.2. Copying a data class](README.md#52-copying-a-data-class)
+    - [5.3. Mapping an object into variables](README.md#53-mapping-an-object-into-variables)
 
-- [6 Parsing data](README.md#6-parsing-data)
-    - [6.1 Converting json to data classes](README.md#61-converting-json-to-data-classes)
-    - [6.2 Shaping the domain layer](README.md#62-shaping-the-domain-layer)
-    - [6.3 Drawing the data in the UI](README.md#63-drawing-the-data-in-the-ui)
+- [6. Parsing data](README.md#6-parsing-data)
+    - [6.1. Converting json to data classes](README.md#61-converting-json-to-data-classes)
+    - [6.2. Shaping the domain layer](README.md#62-shaping-the-domain-layer)
+    - [6.3. Drawing the data in the UI](README.md#63-drawing-the-data-in-the-ui)
+
+- [7. Operator overloading](README.md#7-operator-overloading)
+    - [7.1. Operators tables](README.md#71-operators-tables)
+    - [7.2. Operators in extension functions](README.md#72-operators-in-extension-functions)
 
 ---
 
@@ -291,7 +295,7 @@ val forecastList: RecyclerView = find(R.id.forecast_list)
 
 ## 4. Retrieving data from API
 
-### 4.1 Performing a request
+### 4.1. Performing a request
 
 Request class simply receives an url, reads the result and outputs the json in the Logcat
 
@@ -306,7 +310,7 @@ class Request(val url: String) {
 }
 ```
 
-### 4.2 Performing the request out of the main thread
+### 4.2. Performing the request out of the main thread
 
 ```kotlin
 async() {
@@ -336,14 +340,14 @@ Data classes in Kotlin = POJO classes in Java
 data class Forecast(val date: Date, val temperature: Float, val details: String)
 ```
 
-### 5.1 Extra functions
+### 5.1. Extra functions
 
 * ```equals()```
 * ```hashCode()```
 * ```copy()```: copy an object, modify the properties.
 * A set of numbered functions to map an object into variables.
 
-### 5.2 Copying a data class
+### 5.2. Copying a data class
 
 If using immutability, if we want to change the state of an object, a new instance of the class is required
 
@@ -354,12 +358,12 @@ val f2 = f1.copy(temperature = 30f)
 
 This way, we copy the first forecast and modify only the temperature property without changing the state of the original object.
 
-### 5.3 Mapping an object into variables
+### 5.3. Mapping an object into variables
 
 * This process is known as **multi-declaration** and consists of mapping each property inside an object into a variable.
 * The ```componentX``` functions are automatically created.
 
-Ex:
+Example:
 
 ```kotlin
 val f1 = Forecast(Date(), 27.5f, "Shiny day")
@@ -382,9 +386,9 @@ for ((key, value) in map) {
 }
 ```
 
-## 6 Parsing data
+## 6. Parsing data
 
-### 6.1 Converting json to data classes
+### 6.1. Converting json to data classes
 
 **Companion objects**
 
@@ -409,7 +413,7 @@ class ForecastRequest(val zipCode: String) {
 }
 ```
 
-### 6.2 Shaping the domain layer
+### 6.2. Shaping the domain layer
 
 ```kotlin
 class ForecastDataMapper {
@@ -451,7 +455,7 @@ return list.map { convertForecastItemToDomain(it) }
 
 In a single line, we can loop over the collection and return a new list with the converted items.
 
-### 6.3 Drawing the data in the UI
+### 6.3. Drawing the data in the UI
 
 ```kotlin
 override fun onBindViewHolder(holder: ViewHolder,
@@ -463,4 +467,90 @@ override fun onBindViewHolder(holder: ViewHolder,
 ```
 
 _```with``` is a useful function included in the standard Kotlin library. It basically receives an object and an extension function as parameters, and makes the object execute the function. This means that all the code we define inside the brackets acts as an extension function of the object we specify in the first parameter, and we can use all its public functions and properties, as well as this. Really helpful to simplify code when we do several operations over the same object._
+
+## 7. Operator overloading
+
+Kotlin has a fixed number of symbolic operators. A function with a reserved name that will be mapped to the symbol.
+
+To overload an operator, functions must be annotated with the ```operator``` modifier
+
+### 7.1. Operators tables
+
+#### **Unary operations**
+
+| Operator | Function |
+| ----------- | ----------- |
+| +a | a.unaryPlus() |
+| -a | a.unaryMinus() |
+| !a | a.not() |
+| a++ | a.inc() |
+| a- | a.dec() |
+
+#### **Binary operations**
+
+| Operator | Function |
+| ----------- | ----------- |
+| a + b | a.plus(b) |
+| a - b | a.minus(b) |
+| a * b | a.times(b) |
+| a / b | a.div(b) |
+| a % b | a.mod(b) |
+| a..b | a.rangeTo(b) |
+| a in b | b.contains(a) |
+| a !in b | !b.contains(a) |
+| a += b | a.plusAssign(b) |
+| a -= b | a.minusAssign(b) |
+| a *= b | a.timesAssign(b) |
+| a /= b | a.divAssign(b) |
+| a %= b | a.modAssign(b) |
+
+#### **Array-like operations**
+
+| Operator | Function |
+| ----------- | ----------- |
+| a[i] | a.get(i) |
+| a[i, j] | a.get(i, j) |
+| a[i_1, ..., i_n] | a.get(i_1, ..., i_n) |
+| a[i] = b | a.set(i, b) |
+| a[i, j] = b | a.set(i, j, b) |
+| a[i_1, ..., i_n] = b | a.set(i_1, ..., i_n, b) |
+
+#### **Equals operation**
+
+| Operator | Function |
+| ----------- | ----------- |
+| a == b | a?.equals(b) ?: b === null |
+| a != b | !(a?.equals(b) ?: b === null) |
+
+Operators === and !== do identity checks (they are == and != in Java respectively) and can’t be
+overloaded.
+
+#### **Function invocation**
+
+| Operator | Function |
+| ----------- | ----------- |
+| a(i) | a.invoke(i) |
+| a(i, j) | a.invoke(i, j) |
+| a(i_1, ..., i_n) | a.invoke(i_1, ..., i_n) |
+
+### 7.2. Operators in extension functions
+
+We can extend existing classes using extension functions to provide new operations to third party libraries. For instance, we could access to ViewGroup views the same way we do with lists:
+
+```kotlin
+operator fun ViewGroup.get(position: Int): View 
+    = getChildAt(position)
+```
+
+Now to get a view from a ViewGroup by its position:
+
+```kotlin
+val container: ViewGroup = find(R.id.container)
+val view = container[2]
+```
+
+
+
+
+
 
