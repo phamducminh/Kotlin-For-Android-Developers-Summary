@@ -37,6 +37,11 @@
     - [7.1. Operators tables](README.md#71-operators-tables)
     - [7.2. Operators in extension functions](README.md#72-operators-in-extension-functions)
 
+- [8. Lambdas](README.md#8-lambdas)
+    - [8.1. Simplifying setOnClickListener()](README.md#81-simplifying-setOnClickListener)
+    - [8.2. Click listener for ForecastListAdapter](README.md#82-click-listener-for-forecastListAdapter)
+    - [8.3. Extending the language](README.md#83-extending-the-language)
+
 ---
 
 ## 1. Classes and functions
@@ -548,6 +553,132 @@ Now to get a view from a ViewGroup by its position:
 val container: ViewGroup = find(R.id.container)
 val view = container[2]
 ```
+
+## 8. Lambdas
+
+* A lambda expression is a simple way to define an anonymous function.
+* Prevent us from having to write the specification of the function in an abstract class or interface, and then the implementation of the class.
+* In Kotlin, we can use a function as a parameter to another function.
+
+### 8.1. Simplifying setOnClickListener()
+
+To implement a click listener behaviour in Java, we first need to write the OnClickListener interface:
+
+```java
+public interface OnClickListener {
+    void onClick(View v);
+}
+```
+
+And then we write an anonymous class that implements this interface:
+
+```java
+view.setOnClickListener(new OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(v.getContext(), "Click", Toast.LENGTH_SHORT).show();
+    }
+});
+```
+
+This would be the transformation of the code into Kotlin (using Anko toast function):
+
+```kotlin
+view.setOnClickListener(object : OnClickListener {
+    override fun onClick(v: View) {
+        toast("Click")
+    }
+}
+```
+
+Any function that receives an interface with a single function can be substituted by the function.
+
+```kotlin
+fun setOnClickListener(listener: (View) -> Unit)
+```
+
+A lambda expression is defined by the parameters of the function to the left of the arrow (surrounded by parentheses), and the return value to the right. In this case, we get a ```View``` and return ```Unit``` (nothing).
+
+So with this in mind, we can simplify the previous code a little:
+
+```kotlin
+view.setOnClickListener({ view -> toast("Click")})
+```
+
+We can even get rid of the left part if the parameters are not being used:
+
+```kotlin
+view.setOnClickListener({ toast("Click") })
+```
+
+If the function is the last one in the parameters of the function, we can move it out of the parentheses:
+
+```kotlin
+view.setOnClickListener() { toast("Click") }
+```
+
+And, finally, if the function is the only parameter, we can get rid of the parentheses:
+
+```kotlin
+view.setOnClickListener { toast("Click") }
+```
+
+### 8.2. Click listener for ForecastListAdapter
+
+In Java
+
+```java
+interface OnItemClickListener {
+    operator fun invoke(forecast: Forecast)
+}
+
+class ViewHolder(view: View, val itemClick: OnItemClickListener) :
+        RecyclerView.ViewHolder(view) {
+            ...
+}
+
+public class ForecastListAdapter(val weekForecast: ForecastList,
+         val itemClick: ForecastListAdapter.OnItemClickListener) :
+        RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
+    ...
+}
+
+forecastList.adapter = ForecastListAdapter(result,
+        object : ForecastListAdapter.OnItemClickListener{
+            override fun invoke(forecast: Forecast) {
+                toast(forecast.date)
+            }
+        })
+```
+
+Using lambda:
+
+```kotlin
+public class ForecastListAdapter(val weekForecast: ForecastList,
+                                 val itemClick: (Forecast) -> Unit)
+```
+
+The function will receive a forecast and return nothing. The same change can be done to the ```ViewHolder```:
+
+```kotlin
+class ViewHolder(view: View, val itemClick: (Forecast) -> Unit)
+```
+
+Then:
+
+```kotlin
+val adapter = ForecastListAdapter(result) { forecast -> toast(forecast.date) }
+```
+
+In functions that only need one parameter, we can make use of the **_it_** reference, which prevents us from defining the left part of the function specifically.
+
+```kotlin
+val adapter = ForecastListAdapter(result) { toast(it.date) }
+```
+
+### 8.3. Extending the language
+
+Check 13.3 Extending the language in the book for further details
 
 
 
