@@ -42,6 +42,14 @@
     - [8.2. Click listener for ForecastListAdapter](README.md#82-click-listener-for-forecastListAdapter)
     - [8.3. Extending the language](README.md#83-extending-the-language)
 
+- [9. Visibility Modifiers](README.md#9-visibility-modifiers)
+    - [9.1. Modifiers](README.md#91-modifiers)
+    - [9.2. Constructors](README.md#92-constructors)
+    - [9.3. Revising our code](README.md#93-revising-our-code)
+
+- [10. Kotlin Android Extensions](README.md#10-kotlin-android-extensions)
+    - [10.1. How to use Kotlin Android Extensions](README.md#101-how-to-use-kotlin-android-extensions)
+
 ---
 
 ## 1. Classes and functions
@@ -679,6 +687,114 @@ val adapter = ForecastListAdapter(result) { toast(it.date) }
 ### 8.3. Extending the language
 
 Check 13.3 Extending the language in the book for further details
+
+## 9. Visibility Modifiers
+
+The default modifier in Kotlin language is ```public```
+
+### 9.1. Modifiers
+
+#### **private**
+
+Same as Java.
+
+#### **protected**
+
+Same as Java.
+
+#### **internal**
+
+* An internal member is visible inside the whole module if it’s a package member. If it’s a member inside another scope, it depends on the visibility of the scope.
+* We can use internal classes from any other class in the same module, but not from another module.
+
+##### _What is a module?_
+
+_According to Jetbrains definition, a module is a discrete unit of functionality which you can compile, run, test and debug independently. It basically refers to the Android Studio modules we can create to divide our project into different blocks. In Eclipse, these modules would refer to the projects inside a workspace._
+
+#### **public**
+
+Same as Java.
+
+### 9.2. Constructors
+
+* By default, all constructors are public, which means they can be used from any scope where their class is visible.
+* We can make a constructor private using this specific syntax:
+
+```kotlin
+class C private constructor(a: Int) { ... }
+```
+
+### 9.3. Revising our code
+
+In Kotlin we don’t need to specify the return type of a function if it can be computed by the compiler.
+
+```kotlin
+data class ForecastList(...) {
+    fun get(position: Int) = dailyForecast[position]
+    fun size() = dailyForecast.size()
+}
+```
+
+## 10. Kotlin Android Extensions
+
+_The plugin substitutes any properties call into a function that requests the view, and a caching function that prevents from having to find the view every time a property is called._
+
+_Be aware that this caching mechanism only works if the receiver is an Activity or a Fragment. If it’s used in an extension function, the caching will be skipped, because it could be used in an activity the plugin is not able to modify, so it won’t be able to add the caching function._
+
+### 10.1. How to use Kotlin Android Extensions
+
+Add the dependency to ```app build.gradle```:
+
+```
+apply plugin: 'kotlin-android-extensions'
+
+...
+
+buildscript {
+    repositories {
+jcenter()
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+    }
+}
+```
+
+The only thing required by the plugin is the addition of a special “synthetic” ```import``` to the class that
+makes use of this feature.
+
+#### Android Extensions for Activities or Fragments
+
+* The views can be accessed as if they were properties of the activity or fragment. The names of the properties are the ids of the views in the XML.
+* The ```import``` we need to use will start with           ```kotlin.android.synthetic``` plus the name of the XML we want to bind to the activity. We also have to specify the build variant:
+
+```kotlin
+import kotlinx.android.synthetic.main.activity_main.*
+```
+
+From that moment, we can access the views after ```setContentView``` is called.
+
+* If using ```include``` tag, we’ll need to add a synthetic import for any XMLs we use:
+
+```kotlin
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
+```
+
+#### Android Extensions for Views
+
+To access the views inside an XML, for example, a custom view or an adapter. The only difference is the required ```import```:
+
+```kotlin
+import kotlinx.android.synthetic.main.view_item.view.*
+```
+
+If we were in an adapter, for instance, we could now access the properties from the inflated views:
+
+```kotlin
+view.textView.text = "Hello"
+```
+
+
 
 
 
