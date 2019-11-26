@@ -50,6 +50,13 @@
 - [10. Kotlin Android Extensions](README.md#10-kotlin-android-extensions)
     - [10.1. How to use Kotlin Android Extensions](README.md#101-how-to-use-kotlin-android-extensions)
 
+- [11. Application Singleton and Delegated Properties](README.md#11-application-singleton-and-delegated-properties)
+    - [11.1. Application Singleton](README.md#111-application-singleton)
+    - [11.2. Delegated Properties](README.md#112-delegated-properties)
+    - [11.3. Standard Delegates](README.md#113-standard-delegates)
+    - [11.4. How to create a custom delegate](README.md#114-how-to-create-a-custom-delegate)
+    - [11.5. Reimplementing App Singleton](README.md#115-reimplementing-app-singleton)
+
 ---
 
 ## 1. Classes and functions
@@ -285,6 +292,11 @@ public class Person {
 
 }
 ```
+
+__Notes__:
+
+* **backing field**: if the property needs access to its own value in custom getter and setter
+* The backing field can only be used inside property accessors
 
 ## 3. Anko and Extension Functions
 
@@ -793,6 +805,18 @@ If we were in an adapter, for instance, we could now access the properties from 
 ```kotlin
 view.textView.text = "Hello"
 ```
+
+## 11. Application Singleton and Delegated Properties
+
+### 11.1. Application Singleton
+
+### 11.2. Delegated Properties
+
+### 11.3. Standard Delegates
+
+### 11.4. How to create a custom delegate
+
+### 11.5. Reimplementing App Singleton
 
 
 
