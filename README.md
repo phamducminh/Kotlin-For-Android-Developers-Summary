@@ -318,6 +318,27 @@ val forecastList: RecyclerView = find(R.id.forecast_list)
 
 ### 3.3. Extension functions
 
+* An extension function is a function that _adds a new behaviour to a class, even if we don’t have access to the source code of that class_. Think of it as implementing in utility classes which include a set of static methods in Java.
+* The advantage of using extension functions in Kotlin is that we don’t need to pass the object as an arguments. The extension function acts as if it belonged to the class, and we can implement it using `this` and all its public methods.
+
+_Example_: Create a `toast` function which doesn’t ask for the context, which could be used by any `Context` objects
+
+```kotlin
+fun Context.toast(message: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, message, duration).show()
+}
+```
+
+Extension functions can also be properties.
+
+```kotlin
+public var TextView.text: CharSequence
+    get() = getText()
+    set(v) = setText(v)
+```
+
+**Extension functions don’t really modify the original class, but the function is added as a static import where it is used. Extension functions can be declared in any file, so a common practice is to create files which include a set of related functions.**
+
 ## 4. Retrieving data from API
 
 ### 4.1. Performing a request
